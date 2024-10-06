@@ -8,6 +8,9 @@ var handlebars=require('hbs');
 var indexRouter = require('./server/routes/index');
 var travelRouter = require('./server/routes/travel');
 var usersRouter = require('./server/routes/users');
+var apiRouter=require('./api/routes/index');
+
+require('./api/models/db');
 
 var app = express();
 
@@ -27,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/travel',travelRouter);
 app.use('/users', usersRouter);
+app.use('/api',apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
