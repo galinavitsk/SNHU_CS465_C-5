@@ -8,6 +8,11 @@ var handlebars=require('hbs');
 var indexRouter = require('./server/routes/index');
 var travelRouter = require('./server/routes/travel');
 var usersRouter = require('./server/routes/users');
+var contactRouter=require('./server/routes/contact');
+var aboutRouter=require('./server/routes/about');
+var mealsRouter=require('./server/routes/meals');
+var roomsRouter=require('./server/routes/rooms');
+var newsRouter=require('./server/routes/news');
 var apiRouter=require('./api/routes/index');
 
 require('./api/models/db');
@@ -28,7 +33,11 @@ app.use(cookieParser());
 app.use('', indexRouter);
 app.use('/', indexRouter);
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.use('/rooms',roomsRouter);
+app.use('/meals',mealsRouter);
+app.use('/news',newsRouter);
+app.use('/contact',contactRouter);
+app.use('/about',aboutRouter);
 app.use('/travel',travelRouter);
 app.use('/users', usersRouter);
 app.use('/api',apiRouter);
