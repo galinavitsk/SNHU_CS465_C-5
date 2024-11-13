@@ -1,6 +1,6 @@
 "use client";
 
-import { LogIn } from "@/api/tripsService";
+import { LogIn } from "@/api/authService";
 import Button from "@/components/Button";
 import Link from "next/link";
 import Image from "next/image";
@@ -29,7 +29,7 @@ export default function Home() {
 
   }
   return (<>
-    <div className="flex h-24 items-center px-10 gap-x-10">
+    <div className=" flex h-24 items-center px-10 gap-x-10 bg-blue-50 shadow-sm border-b-2 border-b-blue-200">
       <Link href="/" >
         <Image src={"/images/logo.png"} alt="Travlr GetAways" width={100} height={24} /></Link>
     </div>

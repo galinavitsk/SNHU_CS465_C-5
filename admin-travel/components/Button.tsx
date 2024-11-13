@@ -14,7 +14,7 @@ interface Props {
   size?: string;
   ignoreMinHeight?: boolean;
   typeButton?: "button" | "reset" | "submit";
-  icon?: {image:JSX.Element, color?:string}
+  icon?: { image: JSX.Element, color?: string }
 }
 
 /**
@@ -45,18 +45,18 @@ const Button = ({
 }: Props) => {
   let hoverClass = "";
   switch (type) {
-  case "primary":{
-    hoverClass = `${disabled ? "!opacity-[0.3]" : "hover:bg-orange-300"}`;
-    break;
-  }
-  case "secondary":
-    hoverClass = `${disabled ? "!opacity-[0.3]" : "hover:bg-orange-300"}`;
-    break;
-  case "active":
-    hoverClass = `!opacity-100`;
-    break;
-  default:
-    hoverClass = `${disabled ? "!opacity-[0.3]" : ""}`;
+    case "primary": {
+      hoverClass = `${disabled ? "!opacity-[0.3]" : "hover:bg-orange-300"}`;
+      break;
+    }
+    case "secondary":
+      hoverClass = `${disabled ? "!opacity-[0.3]" : "hover:bg-orange-300"}`;
+      break;
+    case "active":
+      hoverClass = `!opacity-100`;
+      break;
+    default:
+      hoverClass = `${disabled ? "!opacity-[0.3]" : ""}`;
   }
 
   return (
@@ -65,13 +65,13 @@ const Button = ({
       onClick={onClick}
       type={typeButton}
       className={`rounded-lg center relative
-        ${type=="primary" ? 'bg-blue-600 text-white' : ""}
+        ${type == "primary" ? 'bg-blue-600 text-white' : ""}
         p-2
         ${classNames?.hover ? ` ${classNames.hover}` : hoverClass}
-        ${type !== "text" && !ignoreMinHeight && "min-h-48"}
-        ${size??""}
+        ${type !== "text" && !ignoreMinHeight && "min-h-5"}
+        ${size ?? ""}
         ${disabled ? " btn-disabled" : ""}
-        ${classNames?.wrapper ??""}
+        ${classNames?.wrapper ?? ""}
         flex flex-row items-center justify-center gap-2`}
     >
       {icon && <div className={icon.color}> {icon.image}</div>}
