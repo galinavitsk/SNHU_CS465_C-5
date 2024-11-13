@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .input-base {
+    @apply border-b-2 border-gray-300 focus-visible:border-b-blue-300 focus-visible:outline-none;
+  }
+  .input-outline {
+    @apply placeholder:text-gray-300 ring-2 ring-gray-300 rounded px-5 p-1 focus-visible:outline-blue-300;
+  }
+}
