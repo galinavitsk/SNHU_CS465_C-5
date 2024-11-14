@@ -12,16 +12,20 @@ const getTripsList = async (req, res) => {
     }
 };
 const getTrip = async (req, res) => {
-    const trips = await Model.find({ 'code': req.params.tripCode }).exec();
-    if (!trips) {
-        return res.status(404).json(err).send('No trips found');
-    } else {
-        return res.status(200).json(trips);
+    try {
+
+        const trips = await Model.find({ '_id': req.params.tripId }).exec();
+        if (!trips) {
+            return res.status(404).json(err).send('No trips found');
+        } else {
+            return res.status(200).json(trips);
+        }
+    } catch (error) {
+        return res.status(404).json(err).send('Error occured');
     }
 };
 
 const addTrip = async (req, res) => {
-    console.log(req.body);
     const newTrip = new Trip({
         code: req.body.code,
         name: req.body.name,
@@ -40,12 +44,16 @@ const addTrip = async (req, res) => {
 };
 
 const editTrip = async (req, res) => {
-    console.log(req.body);
-    const trip = await Model.findOneAndUpdate({ 'code': req.params.tripCode }, req.body).exec();
-    if (!trip) {
-        return res.status(404).json(err).send('No trip found');
-    } else {
-        return res.status(201).json(trip);
+    try {
+
+        const trip = await Model.findOneAndUpdate({ '_id': req.params.tripId }, req.body).exec();
+        if (!trip) {
+            return res.status(404).json(err).send('No trip found');
+        } else {
+            return res.status(201).json(trip);
+        }
+    } catch (error) {
+        return res.status(404).json(err).send('Error occured');
     }
 }
 

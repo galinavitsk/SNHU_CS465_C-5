@@ -6,22 +6,35 @@ import { Trip } from "@/types/trip";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
+import { CheckToken } from "@/api/authService";
 
 export default function Admin() {
     const router = useRouter();
     const [trips, setTrips] = useState<Trip[]>([]);
     const [message, setMessage] = useState<string>("");
-    useEffect(() => {
-        GetTrips().then((res) => {
-            if (res == 400) {
-                setMessage("There has been an error fetching trips. Please refresh the page.");
+    useEffect(function getTrips() {
+        CheckToken().then((valid) => {
+            if (!valid) {
+                router.push("/");
                 return;
             }
-            if (typeof res == "string") {
-                setMessage(res);
-                return;
+            else {
+                GetTrips().then((res) => {
+                    if (res == 401) {
+                        router.push("/");
+                        return;
+                    }
+                    if (res == 400) {
+                        setMessage("There has been an error fetching trips. Please refresh the page.");
+                        return;
+                    }
+                    if (typeof res == "string") {
+                        setMessage(res);
+                        return;
+                    }
+                    setTrips(res);
+                });
             }
-            setTrips(res);
         });
     }, [])
 
@@ -47,7 +60,7 @@ export default function Admin() {
                 <div className="flex flex-wrap pt-2 gap-y-2 gap-x-5 mt-auto mr-auto self-end">
                     <Button
                         onClick={() => {
-                            router.push("/admin/editTrip?id=" + trip.code);
+                            router.push("/admin/trips/editTrip?id=" + trip._id);
                         }}
                         classNames={{ wrapper: "px-5" }}
                         label="Edit" />
@@ -62,7 +75,7 @@ export default function Admin() {
         <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
             <Button
                 onClick={() => {
-                    router.push("/admin/editTrip");
+                    router.push("/admin/trips/editTrip");
                 }}
                 classNames={{ wrapper: "m-10 p-5 bg-green-600" }}
                 label="Add New Trip" />

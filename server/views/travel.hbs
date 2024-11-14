@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
+
 <head>
 	<meta charset="UTF-8">
 	<title>Travel - Travlr Getaways</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
+
 <body>
 	<div id="background">
 		<div id="page">
@@ -16,18 +18,18 @@
 						<div class="body">
 							<h1>Travel</h1>
 							{{#if trips.length}}
-								<ul id="sites">
-									{{#each trips}}
-									<li>
-										<a href="/api/trips/{{this.code}}"><img src="images/{{this.image}}" alt="Img"></a>
-										<h2><a href="/travel">{{this.name}}</a></h2>
-										{{#each this.description}}
-										<p>{{this}}</p>
-										{{/each}}
-									</li>
+							<ul id="sites">
+								{{#each trips}}
+								<li>
+									<a href="/api/trips/{{this._id}}"><img src="images/{{this.image}}" alt="Img"></a>
+									<h2><a href="/travel">{{this.name}}</a></h2>
+									{{#each this.description}}
+									<p>{{this}}</p>
 									{{/each}}
-								</ul>
-								{{else}}
+								</li>
+								{{/each}}
+							</ul>
+							{{else}}
 							<p>{{message}}</p>
 							{{/if}}
 						</div>
@@ -38,4 +40,5 @@
 		{{>footer isTravel=true}}
 	</div>
 </body>
+
 </html>

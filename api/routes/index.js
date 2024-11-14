@@ -16,9 +16,8 @@ function authenticateJWT(req, res, next) {
     }
 
     const token = authHeader.split(' ')[1];
-
+    console.log(token);
     if (token == null) {
-        console.log('Null Bearer Token');
         return res.sendStatus(401);
     }
     const verified = jwt.verify(token, process.env.JWT_SECRET, (err,
@@ -26,16 +25,17 @@ function authenticateJWT(req, res, next) {
         if (err) {
             return res.sendStatus(401).json('Token Validation Error!');
         }
-        req.auth = verified; 
+        req.auth = verified;
     });
-    next(); 
+    next();
 }
 
-
+router.route('/auth')
+    .get(authenticateJWT, authController.checkValid);
 router.route('/trips')
     .get(tripsController.getTripsList)
     .post(authenticateJWT, tripsController.addTrip);
-router.route('/trips/:tripCode')
+router.route('/trips/:tripId')
     .get(tripsController.getTrip)
     .put(authenticateJWT, tripsController.editTrip);
 router.route("/register")

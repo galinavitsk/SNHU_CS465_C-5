@@ -36,5 +36,8 @@ const login = async (req, res) => {
         }
     })(req, res);
 }
+const checkValid = async (req, res) => {
+    return res.status(200).json({ valid: true });
+}
 
-module.exports = { register, login }
+module.exports = { register, login, checkValid }

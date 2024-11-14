@@ -22,7 +22,7 @@ export const NavigationBar = () => {
       <a className={`${selectedPage == "travel" ? selectedNavLink : navLink}`}
         onClick={() => {
           setSelectedPage("travel");
-          router.push("/admin");
+          router.push("/admin/trips");
         }}>Trips</a>
       <a className={`${selectedPage == "rooms" ? selectedNavLink : navLink}`}
         onClick={() => { setSelectedPage("rooms"); }}>Rooms</a>
