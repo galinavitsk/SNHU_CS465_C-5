@@ -21,7 +21,7 @@ const getTrip = async (req, res) => {
             return res.status(200).json(trips);
         }
     } catch (error) {
-        return res.status(404).json(err).send('Error occured');
+        return res.status(404).json(err).send('Error occurred');
     }
 };
 
@@ -50,11 +50,24 @@ const editTrip = async (req, res) => {
         if (!trip) {
             return res.status(404).json(err).send('No trip found');
         } else {
-            return res.status(201).json(trip);
+            return res.status(200).json(trip);
         }
     } catch (error) {
-        return res.status(404).json(err).send('Error occured');
+        return res.status(404).json(err).send('Error occurred');
     }
 }
 
-module.exports = { getTripsList, getTrip, addTrip, editTrip };
+const deleteTrip = async (req, res) => {
+    try {
+        const trip = await Model.findOneAndDelete({ '_id': req.params.tripId }).exec();
+        if (!trip) {
+            return res.status(404).json(err).send('No trip found');
+        } else {
+            return res.status(200).json(trip);
+        }
+    } catch (error) {
+        return res.status(404).json(err).send('Error occurred');
+    }
+}
+
+module.exports = { getTripsList, getTrip, addTrip, editTrip, deleteTrip };

@@ -40,7 +40,7 @@ export default function Home() {
   async function LogInAction() {
     const res = await LogIn(email, password);
     if (res == 200) {
-      router.push("/admin");
+      router.push("/admin/trips");
       return;
     }
     setError(res);

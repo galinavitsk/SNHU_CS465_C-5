@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const tripsController = require('../controllers/trips');
 const authController = require('../controllers/authentication');
+const roomsController = require('../controllers/rooms');
 function authenticateJWT(req, res, next) {
     const authHeader = req.headers['authorization'];
     if (authHeader == null) {
@@ -32,12 +33,25 @@ function authenticateJWT(req, res, next) {
 
 router.route('/auth')
     .get(authenticateJWT, authController.checkValid);
+
+
 router.route('/trips')
     .get(tripsController.getTripsList)
     .post(authenticateJWT, tripsController.addTrip);
 router.route('/trips/:tripId')
     .get(tripsController.getTrip)
-    .put(authenticateJWT, tripsController.editTrip);
+    .put(authenticateJWT, tripsController.editTrip)
+    .delete(authenticateJWT, tripsController.deleteTrip);
+
+router.route('/rooms')
+    .get(roomsController.getRoomsList)
+    .post(authenticateJWT, roomsController.addRoom);
+router.route('/rooms/:roomId')
+    .get(roomsController.getRoom)
+    .put(authenticateJWT, roomsController.editRoom)
+    .delete(authenticateJWT, roomsController.deleteRoom);
+
+
 router.route("/register")
     .post(authController.register);
 router.route("/login")

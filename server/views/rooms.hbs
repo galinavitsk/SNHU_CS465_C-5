@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <!-- Website template by freewebsitetemplates.com -->
 <html>
+
 <head>
 	<meta charset="UTF-8">
 	<title>Rooms - Travlr Getaways Website Template</title>
 	<link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
+
 <body>
 	<div id="background">
 		<div id="page">
@@ -15,32 +17,25 @@
 					<div>
 						<div class="body">
 							<h1>Rooms</h1>
+							{{#if rooms.length}}
 							<ul id="rooms">
+								{{#each rooms}}
 								<li>
-									<a href="/rooms"><img src="images/first-class.jpg" alt="Img"></a>
-									<h2><a href="/rooms">First Class Room</a></h2>
-									<p>
-										Cras dui sapien, feugiat vitae tristique ut, lobortis tempor orci. Donec pulvinar sagittis metus ut tristique. Pellentes que habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas idios.
-									</p>
-									<span class="rate">Rate: 220 / Day</span>
+									<a href="/api/rooms/{{this._id}}"><img src="images/{{this.image}}" alt="Img"></a>
+									<h2><a href="/rooms">{{this.name}}</a></h2>
+									{{#each this.description}}
+									<p>{{this}}</p>
+									{{/each}}
+									<div class="infos">
+										<span class="info">Rate: {{this.rate}} / Day</span>
+										<span class="info">Capacity: {{this.capacity}} people</span>
+									</div>
 								</li>
-								<li>
-									<a href="/rooms"><img src="images/deluxe.jpg" alt="Img"></a>
-									<h2><a href="/rooms">Deluxe Room</a></h2>
-									<p>
-										Sed et augue lorem. In sit amet placerat arcu. Mauris volutpat ipsum ac justo mollis vel vestibulum orci gravida. Vestibulum sit amet porttitor odio. Nulla facilisi. Fusce at pretium felis.
-									</p>
-									<span class="rate">Rate: 150 / Day</span>
-								</li>
-								<li>
-									<a href="/rooms"><img src="images/suite.jpg" alt="Img"></a>
-									<h2><a href="/rooms">Suite Room</a></h2>
-									<p>
-										Sed et augue lorem. In sit amet placerat arcu. Mauris volutpat ipsum ac justo mollis vel vestibulum orci gravida. Vestibulum sit amet porttitor odio. Nulla facilisi. Fusce at pretium felis.
-									</p>
-									<span class="rate">Rate: 180 / Day</span>
-								</li>
+								{{/each}}
 							</ul>
+							{{else}}
+							<p>{{message}}</p>
+							{{/if}}
 						</div>
 					</div>
 				</div>
@@ -49,4 +44,5 @@
 		{{>footer isRooms=true}}
 	</div>
 </body>
+
 </html>

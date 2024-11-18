@@ -282,16 +282,21 @@ hr {
 	border: 1px solid #2c9688;
 	margin-right: 15px;
 }
-#rooms .rate {
+
+#rooms .infos {
+	display: inline-flex;
+	position: absolute;
+	bottom: 30px;
+	column-gap: 20px;
+}
+
+#rooms .info {
 	color: #316e66;
-	display: inline-block;
 	font: 16px/35px "Times New Roman", Times, serif;
 	height: 35px;
 	width: 138px;
 	border: 1px solid #5a4535;
 	text-align: center;
-	position: absolute;
-	bottom: 30px;
 }
 /** Food **/
 #foods li > div.infos {
