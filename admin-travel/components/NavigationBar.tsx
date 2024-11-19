@@ -25,13 +25,15 @@ export const NavigationBar = () => {
           router.push("/admin/trips");
         }}>Trips</a>
       <a className={`${selectedPage == "rooms" ? selectedNavLink : navLink}`}
-        onClick={() => { setSelectedPage("rooms"); }}>Rooms</a>
+        onClick={() => {
+          setSelectedPage("rooms");
+          router.push("/admin/rooms");
+        }}>Rooms</a>
       <Button
         label="Log Out"
         classNames={{ wrapper: "ml-auto bg-blue-500", label: "text-sm" }}
         ignoreMinHeight
         onClick={LogOut} />
-
     </div>
   );
 }

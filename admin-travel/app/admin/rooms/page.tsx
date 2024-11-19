@@ -1,77 +1,76 @@
 "use client";
 
-import { DeleteTrip, GetTrips } from "@/api/tripsService";
+import { DeleteRoom, GetRooms } from "@/api/roomsService";
 import Image from "next/image";
-import { Trip } from "@/types/trip";
+import { Room } from "@/types/room";
 import { useEffect, useState } from "react";
 import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 import { CheckToken } from "@/api/authService";
 
-export default function TripsPage() {
+export default function RoomsPage() {
     const router = useRouter();
-    const [trips, setTrips] = useState<Trip[]>([]);
+    const [rooms, setRooms] = useState<Room[]>([]);
     const [message, setMessage] = useState<string>("");
-    function UpdateTripsList() {
-        GetTrips().then((res) => {
+    function UpdateRoomsList() {
+        GetRooms().then((res) => {
             if (res == 401) {
                 router.push("/");
                 return;
             }
             if (res == 400) {
-                setMessage("There has been an error fetching trips. Please refresh the page.");
+                setMessage("There has been an error fetching rooms. Please refresh the page.");
                 return;
             }
             if (typeof res == "string") {
                 setMessage(res);
                 return;
             }
-            setTrips(res);
+            setRooms(res);
         });
     }
-    useEffect(function getTrips() {
+    useEffect(function getRooms() {
         CheckToken().then((valid) => {
             if (!valid) {
                 router.push("/");
                 return;
             }
             else {
-                UpdateTripsList();
+                UpdateRoomsList();
             }
         });
     }, [])
 
-    const TripCard = (trip: Trip) => {
+    const RoomCard = (room: Room) => {
         return (
-            <div className="p-5 border-2 border-gray-200 rounded-2xl flex-auto w-96 max-w-[33%] flex flex-col" key={trip._id}>
-                <p className="text-xl font-semibold">{trip.name}<span className="text-gray-600 font-light ml-2">{trip.code}</span></p>
+            <div className="p-5 border-2 border-gray-200 rounded-2xl flex-auto w-96 max-w-[33%] flex flex-col" key={room._id}>
+                <p className="text-xl font-semibold">{room.name}<span className="text-gray-600 font-light ml-2">{room.code}</span></p>
                 <Image
-                    src={`/images/${trip.image}`}
-                    alt={trip.name}
+                    src={`/images/${room.image}`}
+                    alt={room.name}
                     width={300}
                     height={200}
                     className="my-2 rounded-md mx-auto"
                 />
-                <p className="text-gray-600 font-light mt-1">{trip.resort}</p>
-                <p className="text-gray-600 font-light mt-1">{trip.length} only</p>
-                <p className="text-gray-600 font-light mt-1">${trip.perPerson} per person</p>
+                <p className="text-gray-600 font-light mt-1">{room.rate} per day</p>
+                <p className="text-gray-600 font-light mt-1">{room.capacity} person capacity</p>
                 <p className="mt-2">
-                    {trip.description.map((d, i) => {
-                        return <span key={`${trip._id}-${i}`}>{d}<br /></span>
+                    {room.description.map((d, i) => {
+                        return <span key={`${room._id}-${i}`}>{d}<br /></span>
                     })}
                 </p>
                 <div className="flex flex-wrap pt-2 gap-y-2 gap-x-5 mt-auto mr-auto self-end">
                     <Button
                         onClick={() => {
-                            router.push("/admin/trips/editTrip?id=" + trip._id);
+                            router.push("/admin/rooms/editRoom?id=" + room._id);
                         }}
                         classNames={{ wrapper: "px-5" }}
                         label="Edit" />
                     <Button
                         onClick={() => {
-                            DeleteTrip(trip._id).then((res) => {
+                            DeleteRoom(room._id).then((res) => {
                                 if (res == 200) {
-                                    UpdateTripsList();
+                                    UpdateRoomsList();
                                 } else { setMessage(res); }
                             })
                         }}
@@ -84,13 +83,13 @@ export default function TripsPage() {
         <div className="min-h-screen font-[family-name:var(--font-geist-sans)]">
             <Button
                 onClick={() => {
-                    router.push("/admin/trips/editTrip");
+                    router.push("/admin/rooms/editRoom");
                 }}
                 classNames={{ wrapper: "m-10 p-5 bg-green-600" }}
-                label="Add New Trip" />
+                label="Add New Room" />
             {message != "" && <p className="text-xl text-red-500 font-bold">{message}</p>}
             <div className="flex flex-wrap gap-5 m-10">
-                {trips.sort((a, b) => a.name.localeCompare(b.name)).map((trip) => { return TripCard(trip); })}
+                {rooms.sort((a, b) => a.name.localeCompare(b.name)).map((room) => { return RoomCard(room); })}
             </div>
         </div>
     );

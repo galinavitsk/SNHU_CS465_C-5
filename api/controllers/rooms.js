@@ -13,8 +13,7 @@ const getRoomsList = async (req, res) => {
 };
 const getRoom = async (req, res) => {
     try {
-
-        const rooms = await Model.find({ '_id': req.params.romId }).exec();
+        const rooms = await Model.find({ '_id': req.params.roomId }).exec();
         if (!rooms) {
             return res.status(404).json(err).send('No rooms found');
         } else {
