@@ -16,7 +16,9 @@ export default function EditTrip() {
     const [message, setMessage] = useState<string>("");
     const [saveEnabled, setSaveEnabled] = useState(false);
     const [tripCodes, setTripCodes] = useState<string[]>([]);
+    const [tripNames, setTripNames] = useState<string[]>([]);
     const [codeDupeError, setCodeDupeError] = useState(false);
+    const [nameDupeError, setNameDupeError] = useState(false);
     const [validImageFormat, setValidImageFormat] = useState(true);
     useEffect(function GetTripForEditing() {
         CheckToken().then((valid) => {
@@ -37,12 +39,15 @@ export default function EditTrip() {
                     }
                     setTrip(res[0]);
                     setDate(res[0].start.split('T')[0]);
-                    GetTrips().then((code) => {
+                    GetTrips().then((trips) => {
                         const codes: string[] = [];
-                        code.forEach((t: Trip) => {
+                        const names: string[] = [];
+                        trips.forEach((t: Trip) => {
                             codes.push(t.code);
+                            names.push(t.name);
                         });
                         setTripCodes([...codes.filter((c) => c != res[0].code)]);
+                        setTripNames([...names.filter((n) => n != res[0].name)]);
                     })
                 })
 
@@ -53,6 +58,7 @@ export default function EditTrip() {
     useEffect(function EnableSaveButton() {
         setValidImageFormat(true);
         setCodeDupeError(false);
+        setNameDupeError(false);
         setSaveEnabled(true);
         if (trip == null || !trip.code || !trip.name || !trip.length || !trip.resort
             || !trip.image || !trip.perPerson || !trip.description?.join("") || !date) {
@@ -61,12 +67,15 @@ export default function EditTrip() {
         if (tripCodes.includes(trip?.code ?? "")) {
             setCodeDupeError(true);
         }
+        if (tripNames.includes(trip?.name ?? "")) {
+            setNameDupeError(true);
+        }
         if (trip?.image && !/\.png|\.jpg|.jpeg/.test(trip.image)) {
             setValidImageFormat(false);
         }
     }, [trip, date, tripId, trip?.code, trip?.name,
         trip?.length, trip?.resort, trip?.image,
-        trip?.perPerson, trip?.description?.length, tripCodes])
+        trip?.perPerson, trip?.description?.length, tripCodes, tripNames])
 
     return (
         <div className="flex flex-col items-center max-w-xl gap-y-5 mx-auto mt-20">
@@ -84,6 +93,7 @@ export default function EditTrip() {
                     onChange={(e) => { setTrip({ ...trip!, name: e.target.value }) }}
                     type="text"
                 />
+                <span className={`text-red-500 col-start-2 ${nameDupeError ? "visible" : "hidden"} `}>Trip name already exists</span>
                 Length: <input
                     className={`input input-outline`}
                     value={trip?.length ?? ""}
@@ -135,7 +145,7 @@ export default function EditTrip() {
                     rows={5}
                 />
                 <Button
-                    disabled={!saveEnabled || codeDupeError}
+                    disabled={!saveEnabled || codeDupeError || nameDupeError || !validImageFormat}
                     onClick={() => {
                         if (trip == null) return;
                         setTrip({ ...trip, start: new Date(date) });

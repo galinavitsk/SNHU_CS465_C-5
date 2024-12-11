@@ -15,7 +15,9 @@ export default function EditRoom() {
     const [message, setMessage] = useState<string>("");
     const [saveEnabled, setSaveEnabled] = useState(false);
     const [roomCodes, setRoomCodes] = useState<string[]>([]);
+    const [roomNames, setRoomNames] = useState<string[]>([]);
     const [codeDupeError, setCodeDupeError] = useState(false);
+    const [nameDupeError, setNameDupeError] = useState(false);
     const [validImageFormat, setValidImageFormat] = useState(true);
     useEffect(function GetRoomForEditing() {
         CheckToken().then((valid) => {
@@ -35,12 +37,15 @@ export default function EditRoom() {
                         return;
                     }
                     setRoom(res[0]);
-                    GetRooms().then((code) => {
+                    GetRooms().then((rooms) => {
                         const codes: string[] = [];
-                        code.forEach((t: Room) => {
+                        const names: string[] = [];
+                        rooms.forEach((t: Room) => {
                             codes.push(t.code);
+                            names.push(t.name);
                         });
                         setRoomCodes([...codes.filter((c) => c != res[0].code)]);
+                        setRoomNames([...names.filter((c) => c != res[0].name)]);
                     })
                 })
 
@@ -51,6 +56,7 @@ export default function EditRoom() {
     useEffect(function EnableSaveButton() {
         setValidImageFormat(true);
         setCodeDupeError(false);
+        setNameDupeError(false);
         setSaveEnabled(true);
         if (room == null || !room.code || !room.name || !room.image || !room.capacity || !room.rate || !room.description?.join("")) {
             setSaveEnabled(false);
@@ -58,11 +64,14 @@ export default function EditRoom() {
         if (roomCodes.includes(room?.code ?? "")) {
             setCodeDupeError(true);
         }
+        if (roomNames.includes(room?.name ?? "")) {
+            setNameDupeError(true);
+        }
         if (room?.image && !/\.png|\.jpg|.jpeg/.test(room.image)) {
             setValidImageFormat(false);
         }
     }, [room, roomId, room?.code, room?.name,
-        room?.rate, room?.capacity, room?.image, room?.description?.length, roomCodes])
+        room?.rate, room?.capacity, room?.image, room?.description?.length, roomCodes, roomNames])
 
     return (
         <div className="flex flex-col items-center max-w-xl gap-y-5 mx-auto mt-20">
@@ -80,6 +89,7 @@ export default function EditRoom() {
                     onChange={(e) => { setRoom({ ...room!, name: e.target.value }) }}
                     type="text"
                 />
+                <span className={`text-red-500 col-start-2 ${nameDupeError ? "visible" : "hidden"} `}>Room name already exists</span>
                 Rate: <input
                     className={`input input-outline`}
                     value={room?.rate ?? ""}
@@ -101,7 +111,7 @@ export default function EditRoom() {
                 />
                 Capacity: <input
                     className={`input input-outline`}
-                    value={room?.capacity ?? ""}
+                    value={room?.capacity ?? 0}
                     onKeyDown={(event) => {
                         if ((!/[0-9]|[.]/.test(event.key) &&
                             event.key !== "Backspace" &&
@@ -114,7 +124,7 @@ export default function EditRoom() {
                         }
                     }}
                     onChange={(e) => {
-                        setRoom({ ...room!, capacity: parseInt(e.target.value) })
+                        setRoom({ ...room!, capacity: parseInt(e.target.value) || 0 })
                     }}
                 />
                 Image Name: <input
@@ -131,7 +141,7 @@ export default function EditRoom() {
                     rows={5}
                 />
                 <Button
-                    disabled={!saveEnabled || codeDupeError}
+                    disabled={!saveEnabled || codeDupeError || nameDupeError || !validImageFormat}
                     onClick={() => {
                         if (room == null) return;
                         setRoom({ ...room });
